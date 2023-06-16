@@ -76,9 +76,12 @@ df_cn = parse_url(url_cn)
 
 df = df_en.copy()
 df['prompt_cn'] = df_cn['prompt']
+
+# 提示器分类
 category = df['class'].apply(lambda x: x.split('|'))
 category = set([element for sublist in category.tolist() for element in sublist])
 df_category = [df[df['class'].str.contains(cg)].reset_index(drop=True) for cg in category]
-
 result = pd.concat(dict(zip(category, df_category)), axis=0, keys=category).drop(columns=['class'])
+
+# 保存结果
 save_excel(result, 'output.xlsx', ['class', 'No'])
